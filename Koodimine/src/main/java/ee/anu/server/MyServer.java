@@ -6,10 +6,6 @@ import java.net.Socket;
 import java.util.*;
 
 public class MyServer {
-    /*public static void main(String[] args) throws IOException {
-        List<RequestHandler> handlers = Arrays.asList(new Bussid(), new Rongid(), new FileHandler("/home/anu"), new WeatherHandler());
-        serve(handlers);                                               //selgitatakse välja, mis klass oskab urliga midagi teha
-    }*/
 
     public static void serve(RequestHandler requestHandler) throws IOException {
         ServerSocket serverSocket = new ServerSocket(8080);
@@ -37,8 +33,7 @@ public class MyServer {
 
         //find request URI
         String[] headersArray = allHeaders.split("\r\n");
-        String requestLine = headersArray[0];
-        String[] requestLineSplitted = requestLine.split(" ");
+        String[] requestLineSplitted = headersArray[0].split(" ");
         String method = requestLineSplitted[0];
         String requestURI = requestLineSplitted[1];
 
@@ -60,17 +55,15 @@ public class MyServer {
             headeriteVoolikuOts.write(readFromStream);
             emptyLine.add((byte) readFromStream);
 
-            readFromStream = stream.read();
-            headeriteVoolikuOts.write(readFromStream);
-            emptyLine.add((byte) readFromStream);
-
-            readFromStream = stream.read();
-            headeriteVoolikuOts.write(readFromStream);
-            emptyLine.add((byte) readFromStream);
+            for (int i = 0; i < 2; i++){
+                readFromStream = stream.read();
+                headeriteVoolikuOts.write(readFromStream);
+                emptyLine.add((byte) readFromStream);
+            }
 
             while (true) {
                 if (headeriteVoolikuOts.size() > 100000) {
-                    System.out.println("oops");
+                    System.out.println("Too much data.");
                 }
 
                 readFromStream = stream.read();
@@ -109,9 +102,7 @@ public class MyServer {
     }
 
     private static void processRequest(Response responseData, Socket clientSocket) throws IOException {
-        //MainHandlerit ei tee siin, server ei tea handlerist midagi
         serverResponse(clientSocket.getOutputStream(), responseData.status, responseData.getHeaders(), responseData.getData());
-
     }
 
     private static Map<String, String> parseParameters(String requestURI) throws UnsupportedEncodingException {

@@ -28,8 +28,7 @@ public class FileHandler implements RequestHandler {
             path = root + "/" + mappedString;
         }
 
-        ClassLoader classLoader = FileHandler.class.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream(path);
+        InputStream in = FileHandler.class.getClassLoader().getResourceAsStream(path);
         Map<String, String> headers = new HashMap<>();
         byte[] data;
         if (in != null){
