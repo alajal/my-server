@@ -50,6 +50,8 @@ public class FileHandler implements RequestHandler {
                 } else {
                     headers.put("Content-Type", "application/octet-stream");
                 }
+            } else {
+                headers.put("Content-Type", "application/octet-stream");
             }
 
             headers.put("Content-Length", String.valueOf(data.length));

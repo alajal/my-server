@@ -27,19 +27,16 @@ public class MyServer {
         if (bytes.getHeaders().length < 1) {
             return;
         }
-
         //read bytes and turn to string till "\r\n"
         String allHeaders = new String(bytes.getHeaders(), 0, bytes.getHeaders().length, "UTF-8");
-
         //find request URI
         String[] headersArray = allHeaders.split("\r\n");
-        String[] requestLineSplitted = headersArray[0].split(" ");
-        String method = requestLineSplitted[0];
-        String requestURI = requestLineSplitted[1];
+        String s = headersArray[0];
+        String req = s.substring(s.indexOf(" ") + 1, s.lastIndexOf(" "));
+        String method = s.substring(0, s.indexOf(" "));
 
-        Response responseData = requestHandler.handleRequest(requestURI, parseParameters(requestURI), bytes.getRequestBody(),method);
+        Response responseData = requestHandler.handleRequest(req, parseParameters(req), bytes.getRequestBody(),method);
         processRequest(responseData, clientSocket);
-
     }
 
     private static Request inputStreamToByteArray(InputStream stream) throws IOException {
