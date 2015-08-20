@@ -34,8 +34,9 @@ public class MyServer {
         String s = headersArray[0];
         String req = s.substring(s.indexOf(" ") + 1, s.lastIndexOf(" "));
         String method = s.substring(0, s.indexOf(" "));
+        String requestURI = java.net.URLDecoder.decode(req, "UTF-8");
 
-        Response responseData = requestHandler.handleRequest(req, parseParameters(req), bytes.getRequestBody(),method);
+        Response responseData = requestHandler.handleRequest(requestURI, parseParameters(req), bytes.getRequestBody(),method);
         processRequest(responseData, clientSocket);
     }
 
